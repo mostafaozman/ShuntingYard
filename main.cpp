@@ -1,9 +1,14 @@
+/*
+ BY: MOSTAFA OSMAN
+ Shunting yard algorithm using stack and queue, currently only does postfix
+ */
+
 #include <iostream>
 #include <cstring>
 
 using namespace std;
 
-
+// Declaring Stack
 struct Stack
 {
     char StackData;
@@ -16,10 +21,10 @@ void StackPush(char value);
 char pop();
 char peek();
 void clearStack();
-
+// stack pointers
 Stack *top = NULL;
 Stack *bottom=NULL;
-
+// declaring queue
 struct Queue
 {
     char QueueData;
@@ -32,7 +37,7 @@ void enqueue(int value);
 void dequeue();
 void showFirst();
 void printQueue();
-
+// queue pointers
 Queue *front = NULL;
 Queue *rear = NULL;
 
@@ -101,10 +106,15 @@ int main()
                 }
                 else if (findPrecedence(input[i]) >= findPrecedence(peek()))
                     StackPush(input[i]);
-                else {
+                else
+                {
                     while(!isStackEmpty())
+                    {
                         enqueue(pop());
+                    }
+                    StackPush(input[i]);
                 }
+                
                 /*
                  
                  while (peek() == '+' || peek() == '-' || peek() == '*'|| peek() == '/' || peek() == '^')
@@ -126,10 +136,13 @@ int main()
                 }
                 pop();
             }
+            
+            //if ((isStackEmpty() == false) && (i == strlen(input)-1))
             i++;
-        }
+        }// if the stack is empty then add to queue
         while(!isStackEmpty())
             enqueue(pop());
+        
         
         printQueue();
         
@@ -155,7 +168,7 @@ bool isStackEmpty()
         return false;
     }
 }
-
+// adds to top  of the stack
 void StackPush(char value)
 {
     Stack *ptr = new Stack();
@@ -163,7 +176,7 @@ void StackPush(char value)
     ptr -> StackLink = top;
     top = ptr;
 }
-
+// takes element  off the top of the stack
 char pop()
 {
     char data;
@@ -182,7 +195,7 @@ char pop()
     }
     
 }
-
+// shows element at the top of the stack
 char peek()
 {
     char op = ' ';
@@ -211,7 +224,7 @@ bool isQueueEmpty()
         return false;
     }
 }
-
+// add to queue
 void enqueue(int value)
 {
     Queue *ptr = new Queue();
@@ -228,7 +241,7 @@ void enqueue(int value)
         rear -> QueueLink = ptr;
         rear = ptr;
     }
-}
+} // delete from queue
 void dequeue()
 {
     if (isQueueEmpty() == true)
@@ -249,7 +262,7 @@ void dequeue()
             free(ptr);
         }
     }
-}
+} // show front of the queue
 void showFirst()
 {
     if (isQueueEmpty() == true)
@@ -260,7 +273,7 @@ void showFirst()
     {
         cout << front -> QueueData;
     }
-}
+} // prints queue
 void printQueue()
 {
     if (isQueueEmpty() == true)
@@ -286,7 +299,7 @@ void clearStack()
         pop();
     }
 }
-
+// assigns precidence to each of the operators
 int findPrecedence(char op)
 {
     switch (op)
