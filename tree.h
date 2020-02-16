@@ -8,10 +8,11 @@ class tree
  public:
   tree(char*);
   // setters
-  void setRight(tree*);
-  void setLeft(tree*);
-  void setNext(tree*); 
-  
+  void setRight(tree* inRight);
+  void setLeft(tree* inLeft);
+  void setNext(tree* inNext);
+    void setData(char* inData); 
+    
   //getters
   tree* getRight();
   tree* getLeft();

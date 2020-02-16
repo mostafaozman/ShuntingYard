@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <cstring>
+#include "tree.h"
 
 using namespace std;
 
@@ -43,10 +44,19 @@ Queue *rear = NULL;
 
 int findPrecedence(char op);
 
+void preFix(tree* n);
+void postFix(tree* n);
+void inFix(tree* n);
+tree* createData();
+
 int main()
 {
+    //tree* a = new tree("a");
+    tree* data = createData() ;
+    inFix(data);
+    
+    
     int i = 0;
-    int j = 0;
     char input[50], input2[50], prefix[100];
     cout << "Please input an equation." << endl;
     cin.get(input, 50);
@@ -314,4 +324,66 @@ int findPrecedence(char op)
             return 3;
     }
     return 0;
+}
+
+void preFix(tree* n)
+{
+    if (n == NULL)
+    {
+        return;
+    }
+    else
+    {
+        cout << n -> getData();
+        preFix(n -> getLeft());
+        preFix(n -> getRight());
+    }
+}
+
+void postFix(tree* n)
+{
+    if (n == NULL)
+    {
+        return;
+    }
+    else
+    {
+        postFix(n -> getLeft());
+        postFix(n -> getRight());
+        cout << n -> getData();
+    }
+}
+
+void inFix(tree* n)
+{
+    if (n == NULL)
+    {
+        return;
+    }
+    else
+    {
+        inFix(n -> getLeft());
+        cout << n -> getData();
+        inFix(n -> getRight());
+    }
+}
+
+tree* createData()
+{
+    tree* a = new tree("a");
+    tree* b = new tree("b");
+    tree* c = new tree("c");
+    tree* d = new tree("d");
+    tree* e = new tree("e");
+    tree* f = new tree("f");
+    tree* g = new tree("g");
+    
+    a -> setLeft(b);
+    a -> setRight(g);
+    b -> setLeft(c);
+    b -> setRight(d);
+    c -> setLeft(e);
+    e -> setRight(f);
+    
+    return a;
 }
