@@ -1,7 +1,8 @@
 #include <iostream>
 #include "tree.h"
 
-tree::tree(char* setData)
+// A tree node will have a keft pointer, right pointer, data, and a next
+tree::tree(char setData)
 {
   data = setData;
   right = NULL;
@@ -39,12 +40,12 @@ tree* tree::getNext()
     return next;
 }
 
-void tree::setData(char *inData)
+void tree::setData(char inData)
 {
     data = inData;
 }
 
-char* tree::getData()
+char tree::getData()
 {
     return data; 
 }

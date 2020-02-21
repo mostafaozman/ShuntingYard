@@ -1,6 +1,6 @@
 /*
  BY: MOSTAFA OSMAN
- Shunting yard algorithm using stack and queue, currently only does postfix
+ Shunting yard algorithm using stack and queue, creates a postfix expression and then builds a binary tree. The tree can be traversed to ouput different froms of the expression. Please input using characters
  */
 
 #include <iostream>
@@ -30,7 +30,7 @@ bool isStackEmptyT();
 StackT *topT = NULL;
 StackT *bottomT = NULL;
 
-
+bool aa=true;
 bool isStackEmpty();
 void StackPush(char value);
 char pop();
@@ -73,12 +73,12 @@ int main()
     
     int i = 0;
     char input[50], input2[50], prefix[100];
-    cout << "Please input an equation." << endl;
+    cout << "Please input an equation constructed of characters. ex:(a+b)" << endl;
     cin.get(input, 50);
     cin.clear();
     cin.ignore(100000, '\n');
     
-    cout << input << endl;
+    // cout << input << endl;
     
     while(input[i] != '\0')
     {
@@ -118,7 +118,7 @@ int main()
             }
             
         }
-        // if it closing bracket
+        // if it closing paranthesis
         else if (input[i] == ')')
         {
             while (peek() != '(')
@@ -139,31 +139,37 @@ int main()
     
     printQueue();
     
-    tree* data = buildTree();
+    tree* mytree = buildTree();
     
-    cout << "\nWould you like the output in infix, postfix, or prefix?" <<  endl;
-    cin.get(input2, 50);
-    cin.clear();
-    cin.ignore(100000, '\n');
-    cout <<  input2;
-    
-    if(strcmp(input2, "infix") == 0)
-    {
-        inFix(data);
-    }
-    
-    if(strcmp(input2, "postfix") == 0)
-    {
-        postFix(data);
-    }
-    
-    if(strcmp(input2, "prefix") == 0)
-    {
-        preFix(data);
-    }
-    else
-    {
-        cout << "Invalid Input." << endl;
+    while (aa==true){
+        cout << "\nWould you like the output in infix, postfix, or prefix? (If you would like to quit please type qq)" <<  endl;
+        cin.get(input2, 50);
+        cin.clear();
+        cin.ignore(100000, '\n');
+        //cout <<  input2;
+        
+        if(strcmp(input2, "infix") == 0)
+        {
+            inFix(mytree);
+        }
+        
+        if(strcmp(input2, "postfix") == 0)
+        {
+            postFix(mytree);
+        }
+        
+        if(strcmp(input2, "prefix") == 0)
+        {
+            preFix(mytree);
+        }
+        if(strcmp(input2, "qq") == 0)
+        {
+            aa = false;
+        }
+        else
+        {
+            cout << "\nInvalid Input." << endl;
+        }
     }
     //Print the queue postfix
     // printQueue();
@@ -172,7 +178,7 @@ int main()
     //tree* data = buildTree() ;
     
     //Print the tree inFix
-    // inFix(data);
+    // inFix(data); 
     
 }
 
@@ -352,8 +358,10 @@ int findPrecedence(char op)
 //Print Tree in Prefix
 void preFix(tree* n)
 {
+    //cout<<"\nPrefix Printing";
     if (n == NULL)
     {
+        // cout<<"\n is NULL";
         return;
     }
     else
@@ -367,13 +375,17 @@ void preFix(tree* n)
 //Print Tree in Postfix
 void postFix(tree* n)
 {
+    //cout<<"\nPostFix printing";
     if (n == NULL)
     {
+        // cout<<"\n is NULL";
         return;
     }
     else
     {
+        // cout<<"\nget left";
         postFix(n -> getLeft());
+        // cout<<"\nget right";
         postFix(n -> getRight());
         cout << n -> getData();
     }
@@ -408,19 +420,19 @@ bool isStackEmptyT()
 //Pop tree stack
 tree* popT()
 {
-    tree* data = NULL;
+    tree* subtree = NULL;
     if(isStackEmptyT() == true)
     {
         cout << "The stack is empty" << endl;
-        return data;
+        return subtree;
     }
     else
     {
         StackT *ptr = topT;
         topT = ptr -> StackLinkT;
-        data = ptr -> StackDataT;
-        delete ptr;
-        return data;
+        subtree = ptr -> StackDataT;
+        //  delete ptr;
+        return subtree;
     }
 }
 
@@ -429,6 +441,7 @@ void StackPushT(tree* t)
 {
     StackT *ptr = new StackT();
     ptr -> StackDataT = t;
+    // ptr -> StackDataT->setData(t->getData());
     ptr -> StackLinkT = topT;
     topT = ptr;
 }
@@ -440,7 +453,7 @@ void StackPushT(tree* t)
  topT = ptr;
  }*/
 
-
+//Peek function for tree stack
 tree* peekT()
 {
     tree* op = NULL; //= new tree(" ");
@@ -452,7 +465,7 @@ tree* peekT()
     else
     {
         cout << "The element at the top is: " << topT -> StackDataT -> getData();
-        op = (tree *) topT;
+        op = topT -> StackDataT;
         //op = op -> getData();
         //op -> setLeft(op -> getLeft());
         //op -> setRight(op -> getRight());
@@ -464,13 +477,13 @@ tree* peekT()
 //Test function for debugging
 tree* createData()
 {
-    tree* a = new tree("a");
-    tree* b = new tree("b");
-    tree* c = new tree("c");
-    tree* d = new tree("d");
-    tree* e = new tree("e");
-    tree* f = new tree("f");
-    tree* g = new tree("g");
+    tree* a = new tree('a');
+    tree* b = new tree('b');
+    tree* c = new tree('c');
+    tree* d = new tree('d');
+    tree* e = new tree('e');
+    tree* f = new tree('f');
+    tree* g = new tree('g');
     
     a -> setLeft(b);
     a -> setRight(g);
@@ -496,22 +509,21 @@ tree* buildTree()
         //if it is  an operand, push it in the stack
         if (isalpha(treeData))
         {
-            char* dataptr = &treeData;
-            tree* operand = new tree(dataptr);
+            tree* operand = new tree(treeData);
             StackPushT(operand);
-            cout << "Pushed" << endl;
+            //cout << "Pushed" << endl;
         }
         //if it is an operator, then assign the left and right to be the two top stack nodes
         else if (treeData == '+' || treeData == '-' || treeData == '/' || treeData == '*' || treeData == '^')
         {
             // tree* r = popT();
             // tree* l = popT();
-            tree* t = new tree(&treeData);
+            tree* t = new tree(treeData);
             tree* right = peekT();
             popT();
             tree* left = peekT();
             popT();
-            cout << "Pushed" << endl;
+            //cout << "Pushed" << endl;
             // Right branch = pop
             t -> setRight(right);
             // left branch = pop
@@ -523,5 +535,5 @@ tree* buildTree()
     }
     
     //tree* root = new tree(peekT());
-    return (tree *) topT;
+    return topT -> StackDataT;
 }
